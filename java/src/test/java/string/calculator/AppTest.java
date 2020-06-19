@@ -50,7 +50,8 @@ public class AppTest {
 
     @Test
     public void add_shouldHandleNewLinesAndCommasAsSeparators() {
-        assertEquals("Can't handle comma", 100.1, sut.add("50.1,50"), delta);
-        assertEquals("Can't handle newline", 100.1, sut.add("50.1\n50"), delta);
+        assertEquals("Couldn't handle comma", 100.1, sut.add("50.1,50"), delta);
+        assertEquals("Couldn't handle newline", 100.1, sut.add("50.1\n50"), delta);
+        assertEquals("Couldn't handle newline and comma together", 200.1, sut.add("50.1\n50,100"), delta);
     }
 }

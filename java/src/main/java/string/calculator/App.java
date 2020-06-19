@@ -15,7 +15,8 @@ public class App {
         if (numbers.isEmpty()) {
             return 0d;
         } else {
-            splitNumbers = numbers.split(",");
+            String separatorRegex = ",";
+            splitNumbers = numbers.split(separatorRegex);
         }
         return Arrays.stream(splitNumbers).mapToDouble(Double::valueOf).sum();
     }
