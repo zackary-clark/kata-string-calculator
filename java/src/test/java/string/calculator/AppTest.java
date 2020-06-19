@@ -4,17 +4,53 @@
 package string.calculator;
 
 import org.junit.Test;
+import org.junit.Before;
 import static org.junit.Assert.*;
 
 public class AppTest {
+    App sut;
+    double delta = 0.000001;
+
+    @Before
+    public void setup() {
+        sut = new App();
+    }
+
     @Test
     public void appHasAddMethod() {
-        App sut = new App();
         assertNotNull(sut.add(""));
     }
 
     @Test
-    public void fails() {
-        fail("This Test Just Fails");
+    public void add_shouldReturn0_whenGivenEmptyString() {
+        assertEquals(0, sut.add(""), delta);
+    }
+
+    @Test
+    public void add_shouldReturnNumber_whenGivenSingleNumber() {
+        assertEquals("Couldn't handle single 'int'", 0d, sut.add("0"), delta);
+        assertEquals("Couldn't handle single 'int'", 9d, sut.add("9"), delta);
+        assertEquals("Couldn't handle single 'double'", 100.1, sut.add("100.1"), delta);
+        assertEquals("Couldn't handle single 'double'", 43592.45, sut.add("43592.45"), delta);
+    }
+
+    @Test
+    public void add_shouldReturnSum_whenGivenTwoNumbers() {
+        assertEquals("Couldn't handle two numbers", 100.1, sut.add("100.1,0"), delta);
+        assertEquals("Couldn't add two ints", 100d, sut.add("50,50"), delta);
+        assertEquals("Couldn't add two doubles", 100.2, sut.add("50.1,50.1"), delta);
+        assertEquals("Couldn't add int and double", 100.1, sut.add("50.1,50"), delta);
+    }
+    
+    @Test
+    public void add_shouldReturnSum_whenGivenManyNumbers() {
+        assertEquals("Couldn't add three numbers", 100.1, sut.add("50.1,50,0"), delta);
+        assertEquals("Couldn't add three numbers", 300.33, sut.add("100.11,100.11,100.11"), delta);
+    }
+
+    @Test
+    public void add_shouldHandleNewLinesAndCommasAsSeparators() {
+        assertEquals("Can't handle comma", 100.1, sut.add("50.1,50"), delta);
+        assertEquals("Can't handle newline", 100.1, sut.add("50.1\n50"), delta);
     }
 }

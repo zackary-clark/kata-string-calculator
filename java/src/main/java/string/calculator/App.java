@@ -3,12 +3,20 @@
  */
 package string.calculator;
 
+import java.util.Arrays;
+
 public class App {
     public static void main(String[] args) {
-        System.out.println(new App().add(args[1]));
+        System.out.println(new App().add(args[0]));
     }
 
     public double add(String numbers) {
-        return 0;
+        String[] splitNumbers;
+        if (numbers.isEmpty()) {
+            return 0d;
+        } else {
+            splitNumbers = numbers.split(",");
+        }
+        return Arrays.stream(splitNumbers).mapToDouble(Double::valueOf).sum();
     }
 }
