@@ -3,55 +3,70 @@
  */
 package string.calculator;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AppTest {
     App sut;
     double delta = 0.000001;
 
-    @Before
+    @BeforeEach
     public void setup() {
         sut = new App();
     }
 
     @Test
-    public void appHasAddMethod() {
+    public void appHasAddMethod() throws NumberExpectedException {
         assertNotNull(sut.add(""));
     }
 
     @Test
-    public void add_shouldReturn0_whenGivenEmptyString() {
+    public void add_shouldReturn0_whenGivenEmptyString() throws NumberExpectedException {
         assertEquals(0, sut.add(""), delta);
     }
 
     @Test
-    public void add_shouldReturnNumber_whenGivenSingleNumber() {
-        assertEquals("Couldn't handle single 'int'", 0d, sut.add("0"), delta);
-        assertEquals("Couldn't handle single 'int'", 9d, sut.add("9"), delta);
-        assertEquals("Couldn't handle single 'double'", 100.1, sut.add("100.1"), delta);
-        assertEquals("Couldn't handle single 'double'", 43592.45, sut.add("43592.45"), delta);
+    public void add_shouldReturnNumber_whenGivenSingleNumber() throws NumberExpectedException {
+        assertEquals(0d, sut.add("0"), delta, "Couldn't handle single 'int'");
+        assertEquals(9d, sut.add("9"), delta, "Couldn't handle single 'int'");
+        assertEquals(100.1, sut.add("100.1"), delta, "Couldn't handle single 'double'");
+        assertEquals(43592.45, sut.add("43592.45"), delta, "Couldn't handle single 'double'");
     }
 
     @Test
-    public void add_shouldReturnSum_whenGivenTwoNumbers() {
-        assertEquals("Couldn't handle two numbers", 100.1, sut.add("100.1,0"), delta);
-        assertEquals("Couldn't add two ints", 100d, sut.add("50,50"), delta);
-        assertEquals("Couldn't add two doubles", 100.2, sut.add("50.1,50.1"), delta);
-        assertEquals("Couldn't add int and double", 100.1, sut.add("50.1,50"), delta);
+    public void add_shouldReturnSum_whenGivenTwoNumbers() throws NumberExpectedException {
+        assertEquals(100.1, sut.add("100.1,0"), delta, "Couldn't handle two numbers");
+        assertEquals(100d, sut.add("50,50"), delta, "Couldn't add two ints");
+        assertEquals(100.2, sut.add("50.1,50.1"), delta, "Couldn't add two doubles");
+        assertEquals(100.1, sut.add("50.1,50"), delta, "Couldn't add int and double");
     }
     
     @Test
-    public void add_shouldReturnSum_whenGivenManyNumbers() {
-        assertEquals("Couldn't add three numbers", 100.1, sut.add("50.1,50,0"), delta);
-        assertEquals("Couldn't add three numbers", 300.33, sut.add("100.11,100.11,100.11"), delta);
+    public void add_shouldReturnSum_whenGivenManyNumbers() throws NumberExpectedException {
+        assertEquals(100.1, sut.add("50.1,50,0"), delta, "Couldn't add three numbers");
+        assertEquals(300.33, sut.add("100.11,100.11,100.11"), delta, "Couldn't add three numbers");
     }
 
     @Test
-    public void add_shouldHandleNewLinesAndCommasAsSeparators() {
-        assertEquals("Couldn't handle comma", 100.1, sut.add("50.1,50"), delta);
-        assertEquals("Couldn't handle newline", 100.1, sut.add("50.1\n50"), delta);
-        assertEquals("Couldn't handle newline and comma together", 200.1, sut.add("50.1\n50,100"), delta);
+    public void add_shouldHandleNewLinesAndCommasAsSeparators() throws NumberExpectedException {
+        assertEquals(100.1, sut.add("50.1,50"), delta, "Couldn't handle comma");
+        assertEquals(100.1, sut.add("50.1\n50"), delta, "Couldn't handle newline");
+        assertEquals(200.1, sut.add("50.1\n50,100"), delta, "Couldn't handle newline and comma together");
+    }
+
+    @Test
+    public void add_shouldThrow_whenGivenTwoSeparatorsInARow() {
+        Exception exception = assertThrows(NumberExpectedException.class, () -> sut.add("1,\n"));
+
+        assertEquals("Number expected but '\n' found at position 2.", exception.getMessage(), "Exception message incorrect!");
+    }
+
+    @Test
+    public void sanityCheck() throws NumberExpectedException {
+        sut.add("09\n,.");
     }
 }
